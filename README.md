@@ -24,19 +24,19 @@ The project uses a relational database with two main tables:
 
 users stores:
 
-user IDs
-names
-emails
-hashed passwords
+- user IDs
+- names
+- emails
+- hashed passwords
 
 expenditures stores:
 
-expense entries
-purchase dates
-item names
-descriptions
-costs
-linked user IDs
+- expense entries
+- purchase dates
+- item names
+- descriptions
+- costs
+- linked user IDs
 
 The tables are connected using a foreign key relationship.
 
@@ -53,7 +53,7 @@ Future Improvements
 - Expense categories and budgeting
 - Data visualization and charts
 - Web-based frontend
-- 
+  
 Purpose:
 This project was created to strengthen backend development skills involving:
 
