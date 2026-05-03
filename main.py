@@ -17,12 +17,13 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS users (user_id INT AUTO_INCREMENT P
 mycursor.execute("CREATE TABLE IF NOT EXISTS expenditures (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, date_purchased DATE, item_name VARCHAR(255), description VARCHAR(255), cost DECIMAL(10,2), FOREIGN KEY (user_id) REFERENCES users(user_id));")
 
 #This is the pin for the admin
-global pin
 try:
     with open("pin.txt", "r") as file:
         pin = int(file.read())
 except FileNotFoundError:
     pin = 12345
+    with open("pin.txt", "w") as file:
+        file.write(str(pin))
 
 def clear():
   print("\n" * 40)
@@ -234,6 +235,7 @@ def num_check(prompt) -> int:
     return val
 
 def admin():
+   global pin
    print("You are in the admin login page, please confirm your identity by entering the admin pin or '0' to exit.")
    input_pin = num_check("PIN: ")
 
