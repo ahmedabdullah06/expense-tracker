@@ -18,8 +18,11 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS expenditures (id INT AUTO_INCREMENT
 
 #This is the pin for the admin
 global pin
-with open("pin.txt", "r") as file:
-    pin = int(file.read())
+try:
+    with open("pin.txt", "r") as file:
+        pin = int(file.read())
+except FileNotFoundError:
+    pin = 12345
 
 def clear():
   print("\n" * 40)
