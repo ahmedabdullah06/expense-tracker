@@ -244,6 +244,8 @@ def admin():
         input()
 
         while True:
+            clear()
+            print("-----------------------------------------------------------------------\n")
             print("1. View all expenses.")
             print("2. Export all expenses as a CSV.")
             print("3. Change pin.")
@@ -258,18 +260,23 @@ def admin():
             elif choice == "3":
                new_pin = num_check("Enter a new pin Admin: ")
                if new_pin:
-                  pin = new_pin
-                  with open("pin.txt", "w") as file:
-                    file.write(str(new_pin))
+                    pin = new_pin
+                    with open("pin.txt", "w") as file:
+                        file.write(str(new_pin))
+                    print("PIN changed!")
+                    input()
             elif choice == "4":
-               print("Have a nice day Admin, goodbye!")
+               print("Have a nice day Admin, goodbye!\n")
+               print("-----------------------------------------------------------------------")
                input()
                break
             else:
                print("Invalid input, please try again.")
                input()
+            print("-----------------------------------------------------------------------")
 
 while True:
+    clear()
     print("\n------------------------- Expense Tracker V2 -------------------------\n")
     print("Welcome to the Expense Tracker Version 2!\n")
     print("1. Sign up.")
@@ -290,4 +297,5 @@ while True:
     else:
        print("Invalid input, please enter a valid choice.")
     print("\n----------------------------------------------------------------------\n")
+    input()
 
