@@ -1,6 +1,7 @@
 import os
 import mysql.connector
 import bcrypt
+import pandas as pd
 from decimal import Decimal
 from dotenv import load_dotenv
 load_dotenv()
@@ -146,7 +147,7 @@ def display_all():
     FROM expenditures
     JOIN users 
         ON expenditures.user_id = users.user_id
-    ORDER BY users.name ASC, date_purchased DESC
+    ORDER BY users.name ASC, date_purchased DESC;
     """)
     output = mycursor.fetchall()
 
@@ -173,6 +174,7 @@ def sign_in():
 
     if(result and bcrypt.checkpw(password.encode(), result[3].encode())):
         user_id = result[0]
+        user_name = result[1]
 
         print(f"\nWelcome back, {result[1]}!")
         input()
@@ -183,7 +185,8 @@ def sign_in():
             print("3. View total expenses.")
             print("4. View monthly expenses.")
             print("5. Add/replace description.")
-            print("6. Log out\n")
+            print("6. Export expenses to CSV.")
+            print("7. Log out\n")
 
             choice = input("Please enter your choice: ")
 
@@ -197,8 +200,10 @@ def sign_in():
                 monthly_expenses(user_id)
             elif(choice == "5"):
                 alter_description(user_id)
-            elif(choice == "6"):
-                print(f"\nGoodbye {result[1]}!")
+            elif choice == "6":
+                export_csv(user_id, user_name)
+            elif choice == "7":
+                print(f"\nGoodbye {user_name}!")
                 input()
                 break
             else:
@@ -234,6 +239,39 @@ def num_check(prompt) -> int:
         return 0
     return val
 
+def export_csv(user_id, username):
+    if user_id == 0:
+        sql = """SELECT
+            expenditures.user_id,
+            users.name,
+            users.email,
+            expenditures.item_name,
+            expenditures.description,
+            expenditures.cost,
+            expenditures.date_purchased
+            FROM expenditures
+            JOIN users
+                ON expenditures.user_id = users.user_id
+            ORDER BY users.name ASC, expenditures.date_purchased DESC;
+        """
+        mycursor.execute(sql)
+        output = mycursor.fetchall()
+        columns = ["user_id", "name", "email", "item_name", "description", "cost", "date_purchased"]
+
+        df = pd.DataFrame(output, columns=columns)
+        df.to_csv("admin_export.csv", index=False)
+        print("Export complete!")
+        input()
+    else:
+        mycursor.execute("SELECT id, item_name, description, cost, date_purchased FROM expenditures WHERE user_id = %s", (user_id,))
+        output = mycursor.fetchall()
+        columns = ["id", "item_name", "description", "cost", "date_purchased"]
+
+        df = pd.DataFrame(output, columns=columns)
+        df.to_csv(f"{username}_export.csv", index=False)
+        print("Export complete!")
+        input()    
+
 def admin():
    global pin
    print("You are in the admin login page, please confirm your identity by entering the admin pin or '0' to exit.")
@@ -256,7 +294,7 @@ def admin():
             if choice == "1":
                display_all()
             elif choice == "2":
-               export_csv()
+               export_csv(0, "admin")
             elif choice == "3":
                new_pin = num_check("Enter a new pin Admin: ")
                if new_pin:
@@ -277,7 +315,7 @@ def admin():
 
 while True:
     clear()
-    print("\n------------------------- Expense Tracker V2 -------------------------\n")
+    print("\n------------------------- Expense Tracker -------------------------\n")
     print("Welcome to the Expense Tracker Version 2!\n")
     print("1. Sign up.")
     print("2. Sign in.")
@@ -296,6 +334,5 @@ while True:
        admin()
     else:
        print("Invalid input, please enter a valid choice.")
-    print("\n----------------------------------------------------------------------\n")
-    input()
+    print("\n-------------------------------------------------------------------\n")
 

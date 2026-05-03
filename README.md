@@ -11,6 +11,7 @@ Features
 - Admin dashboard functionality
 - Persistent admin PIN using file handling
 - SQL JOIN queries for analytics and reporting
+- CSV export functionality using pandas
 - Expense descriptions and categorized logging
 - Technologies Used
 - Python
@@ -47,7 +48,6 @@ Security Features
 - Admin authentication through a separate PIN system
 
 Future Improvements
-- CSV export functionality using pandas
 - Power BI integration for analytics dashboards
 - Flask REST API conversion
 - Expense categories and budgeting
